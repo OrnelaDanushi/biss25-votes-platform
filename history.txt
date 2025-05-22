@@ -1,0 +1,6 @@
+ 4124  git init
+ 4125  git add .
+ 4126  git commit -m "Initial codebase"
+ 4127  git remote add origin https://github.com/pafmon/biss25-votes-pafmon.git
+ 4128  git branch -M main
+ 4129  git push -u origin main
