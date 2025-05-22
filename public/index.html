@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script>
+        /*global $*/
+        $(document).ready(function() {
+            var query = window.location.search;
+            var talkId = query.substring(1,query.length);
+
+            $("#talkId").html(talkId);
+
+
+            function refresh(){
+                $.get("/api/v1/talks/"+talkId+"/votes/results", function(data) {
+                    console.log("data received:"+data.average + "/" + data.count);
+
+                    var avg = Math.trunc(data.average * 10) / 10;
+
+                    $("#average").html(avg);
+                    $("#count").html(data.count);
+
+                    setTimeout(refresh, 500);
+
+                });
+            }
+
+            refresh();
+
+        });
+    </script>
+    <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
+    <style type="text/css">
+        body {font-family: 'Nunito', sans-serif; font-size : 2em; background-color: rgba(50, 115, 220, 0.3); }
+        #talkId {font-size : 6em ;}
+        #average {font-size : 10em ; display:inline;}
+        #count { font-size : 4em; display:inline;}
+    </style>
+</head>
+
+<body>
+    <center>
+        <div id="talkId"></div>
+        <div id="average"></div>
+        <div id="count"></div>
+    </center>
+</body>
+
+</html>
