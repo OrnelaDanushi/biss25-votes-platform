@@ -1,6 +1,13 @@
- 4124  git init
- 4125  git add .
- 4126  git commit -m "Initial codebase"
- 4127  git remote add origin https://github.com/pafmon/biss25-votes-pafmon.git
- 4128  git branch -M main
- 4129  git push -u origin main
+git init
+git add .
+git commit -m "Initial codebase"
+git remote add origin https://github.com/OrnelaDanushi/biss25-votes-pafmon.git
+git branch -M main
+git push -u origin main
+
+npm -v
+npm init
+npm install express
+ssh -L 3000:localhost:3000 mau@131.114.50.190
+node index.js
+npx newman run test.json
