@@ -1,10 +1,11 @@
 {
 	"info": {
-		"_postman_id": "42353315-fdac-4087-be3d-84da7bab6921",
+		"_postman_id": "ddaab6a1-bc20-4837-a7dc-01777cf51489",
 		"name": "Votes API ",
 		"description": "this api ....",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "45079625"
+		"_exporter_id": "45199661",
+		"_collection_link": "https://ornela-3976375.postman.co/workspace/c329bca4-cac7-4977-8054-fee82a0b7922/collection/45199661-ddaab6a1-bc20-4837-a7dc-01777cf51489?action=share&source=collection_link&creator=45199661"
 	},
 	"item": [
 		{
@@ -14,10 +15,9 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Response status code is 201\", function () {\r",
-							"  pm.response.to.have.status(201);\r",
-							"});\r",
-							""
+							"pm.test(\"Response status code is 201\", function() {\r",
+							"    pm.response.to.have.status(201)\r",
+							"});"
 						],
 						"type": "text/javascript",
 						"packages": {}
@@ -53,16 +53,15 @@
 			"response": []
 		},
 		{
-			"name": "Create a duplicated talk 'biss25'",
+			"name": "Create duplicated talk 'biss25'",
 			"event": [
 				{
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Response status code is 409\", function () {\r",
-							"  pm.response.to.have.status(409);\r",
-							"});\r",
-							""
+							"pm.test(\"Response status code is 409\", function() {\r",
+							"    pm.response.to.have.status(409)\r",
+							"});"
 						],
 						"type": "text/javascript",
 						"packages": {}
@@ -70,9 +69,6 @@
 				}
 			],
 			"request": {
-				"auth": {
-					"type": "noauth"
-				},
 				"method": "POST",
 				"header": [],
 				"body": {
@@ -107,10 +103,9 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Response status code is 201\", function () {\r",
-							"  pm.response.to.have.status(201);\r",
-							"});\r",
-							""
+							"pm.test(\"Response status code is 201\", function() {\r",
+							"    pm.response.to.have.status(201)\r",
+							"});"
 						],
 						"type": "text/javascript",
 						"packages": {}
@@ -154,10 +149,9 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Response status code is 201\", function () {\r",
-							"  pm.response.to.have.status(201);\r",
-							"});\r",
-							""
+							"pm.test(\"Response status code is 201\", function() {\r",
+							"    pm.response.to.have.status(201)\r",
+							"});"
 						],
 						"type": "text/javascript",
 						"packages": {}
@@ -204,11 +198,10 @@
 							"pm.test(\"Response status code is 200\", function () {\r",
 							"  pm.response.to.have.status(200);\r",
 							"});\r",
-							"\r",
 							"pm.test(\"Result average should be 7.5\", function () {\r",
 							"    const response = pm.response.json();\r",
 							"    pm.expect(response.average).to.exist;\r",
-							"    pm.expect(response.average).to.equal(7.5);\r",
+							"    pm.expect(response.average).to.eql(7.5);\r",
 							"});\r",
 							""
 						],
@@ -258,10 +251,9 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Response status code is 200\", function () {\r",
-							"  pm.response.to.have.status(200);\r",
-							"});\r",
-							""
+							"pm.test(\"Response status code is 200\", function() {\r",
+							"    pm.response.to.have.status(200)\r",
+							"});"
 						],
 						"type": "text/javascript",
 						"packages": {}
