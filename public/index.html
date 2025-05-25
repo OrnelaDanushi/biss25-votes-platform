@@ -9,25 +9,28 @@
             var query = window.location.search;
             var talkId = query.substring(1,query.length);
 
-            $("#talkId").html(talkId);
-
+            $("#talkId").html('Talk ID: ' + talkId);
 
             function refresh(){
+                if (!talkId) {
+                    $("#average").html('Votes Avg: -');
+                    $("#count").html('Votes Sum: -');
+                    return;
+                }
                 $.get("/api/v1/talks/"+talkId+"/votes/results", function(data) {
-                    console.log("data received:"+data.average + "/" + data.count);
-
                     var avg = Math.trunc(data.average * 10) / 10;
-
-                    $("#average").html(avg);
-                    $("#count").html(data.count);
-
+                    $("#average").html('Votes Avg: '+avg);
+                    $("#count").html('Votes Sum: '+data.count);
                     setTimeout(refresh, 500);
-
+                }).fail(function() {
+                    $("#average").html('Votes Avg: -');
+                    $("#count").html('Votes Sum: -');
+                    // Stop the loop on error, or retry after a longer delay:
+                    // setTimeout(refresh, 2000);
                 });
             }
 
             refresh();
-
         });
     </script>
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">

@@ -76,7 +76,6 @@ app.post("/api/v1/talks/:talkId/votes", (request, response) => {
 
 // obtain the results of votes for a talk
 // get /api/v1/talks/:talkId/votes/result
-
 app.get("/api/v1/talks/:talkId/votes/results", (request, response) => {
   let talkId = request.params.talkId;
   if (!votes.has(talkId)){
@@ -96,6 +95,26 @@ app.get("/api/v1/talks/:talkId/votes/results", (request, response) => {
       response.send(results);
   }
 });
+
+
+// NEW
+// obtain the list of all talks
+app.get("/api/v1/talks", (req, res) => {
+  res.json(Array.from(votes.keys()));
+});
+
+
+// delete all the votes of a talk
+app.delete("/api/v1/talks/:talkId/votes", (req, res) => {
+  const talkId = req.params.talkId;
+  if (!votes.has(talkId)) {
+    res.sendStatus(404);
+  } else {
+    votes.set(talkId, []);
+    res.sendStatus(200);
+  }
+});
+
 
 app.listen(port, () => {
   console.log("Server is running on port "+port);
