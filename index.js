@@ -21,11 +21,14 @@ app.listen(3000, () => {
  
 
 const express = require("express");
-const app = express();
+const axios = require('axios');
+const http = require('http');
+require('dotenv').config();
 
 // Set the port to listen on, defaulting to 3000 if not specified
 const port = process.env.PORT || 3000;
 
+const app = express();
 // Middleware to parse JSON request bodies
 app.use(express.json());
 app.use("/",express.static("./public"));
@@ -34,19 +37,91 @@ app.use("/",express.static("./public"));
 // data structure to store the list of votes
 const votes = new Map();
 
+// NOTE: I exhausted the free credits for OpenAI API, so I cannot test the code that uses it.
 // multiple talks
 // POST: https://localhost:3000/api/v1/talks
 // POST: https://biss25-votes-platform.onrender.com/api/v1/talks
 // POST: {{baseURL}}/api/v1/talks
-app.post("/api/v1/talks", (request, response) => {
-  let talkId = request.body.talkId;
-  if (votes.has(talkId)){
-    response.sendStatus(409,"Conflict"); 
-  }else{
-    votes.set(talkId, new Array());
-    response.sendStatus(201,"Talk created.");
+app.post("/api/v1", async (req, res) => {
+  // Check if the request body contains a topic/description
+  if (!req.body.talkId) {
+    return res.status(400).json({ error: "Bad Request: talkId is required." });
+  }
+
+  const prompt = `Generate a short, unique, URL-safe identifier (no spaces, no punctuation except dash or underscore) for a talk about "${req.body.talkId}". Only return the identifier.`;
+  try {
+    const aiResponse = await axios.post(
+      'https://api.openai.com/v1/chat/completions',
+      {
+        model: 'gpt-3.5-turbo',
+        messages: [{ role: 'user', content: prompt }],
+        temperature: 1.0,
+        max_tokens: 20,
+      },
+      { headers: { 'Authorization': `Bearer ${process.env.OPENAI_API_KEY}` } }
+    );
+
+    // Extract and sanitize the talkId
+    let talkId = aiResponse.data.choices[0].message.content.trim();
+    // Remove any unwanted characters (keep only alphanumerics, dash, underscore)
+    talkId = talkId.replace(/[^a-zA-Z0-9\-_]/g, '');
+
+    if (!talkId) {
+      return res.status(500).json({ error: "Failed to generate a valid talkId." });
+    }
+
+    if (votes.has(talkId)) {
+      return res.status(409).json({ error: "Conflict: talkId already exists." });
+    }
+
+    votes.set(talkId, []);
+    res.status(201).json({ talkId, message: "Talk created." });
+
+  } catch (error) {
+    console.error('Generation error:', {
+      request: { talkId: req.body.talkId },
+      error: error.response?.data || error.message
+    });
+
+    res.status(500).json({
+      error: "Generation failed",
+      details: error.response?.data?.error?.message || error.message
+    });
   }
 });
+
+// NOTE: Alternative implementation using nanoid for generating unique identifiers
+// POST: https://localhost:3000/api/v1_
+// POST: https://biss25-votes-platform.onrender.com/api/v1_
+const { nanoid } = require('nanoid');
+app.post("/api/v1_", async (req, res) => {
+  if (!req.body.talkId) {
+    return res.status(400).json({ error: "Bad Request: talkId is required." });
+  }
+
+  // Generate a short, unique, URL-safe identifier
+  let talkId = nanoid(10); // 10 chars, you can change the length
+
+  if (votes.has(talkId)) {
+    return res.status(409).json({ error: "Conflict: talkId already exists." });
+  }
+
+  votes.set(talkId, []);
+  res.status(201).json({ talkId, message: "Talk created." });
+});
+
+
+app.post("/api/v1/talks", async (request, response) => {  
+    let talkId = request.body.talkId;
+    if (votes.has(talkId)){
+      response.sendStatus(409,"Conflict"); 
+    }else{
+      votes.set(talkId, new Array());
+      response.sendStatus(201,"Talk created.");
+    }
+
+});
+
 
 // delete a talk
 app.delete("/api/v1/talks/:talkId", (request, response) => {
