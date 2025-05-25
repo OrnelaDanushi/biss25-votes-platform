@@ -18,7 +18,9 @@
                     return;
                 }
                 $.get("/api/v1/talks/"+talkId+"/votes/results", function(data) {
-                    var avg = Math.trunc(data.average * 10) / 10;
+                //$.get("/api/v1/talks", function(data) {
+
+                    var avg = Math.trunc(data.average * 10) / 10;                    
                     $("#average").html('Votes Avg: '+avg);
                     $("#count").html('Votes Sum: '+data.count);
                     setTimeout(refresh, 500);
